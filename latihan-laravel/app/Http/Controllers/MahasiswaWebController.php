@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use Illuminate\Support\Facades\DB;
 
 class MahasiswaWebController extends Controller
 {
@@ -15,6 +16,9 @@ class MahasiswaWebController extends Controller
      */
     public function index()
 {
+    DB::listen(function ($kueri) {
+logger($kueri->sql);
+});
 $daftarMahasiswa = Mahasiswa::with('programStudi')
 ->orderBy('nama')
 ->paginate(10);
