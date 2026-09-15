@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MatakuliahController;
+use App\Http\Controllers\ProgramStudiController;
+use App\Http\Controllers\MahasiswaWebController;
 
 Route::get('/data-mahasiswa', [MahasiswaController::class,
 'index'])->name('mahasiswa.index');
@@ -31,3 +33,6 @@ return 'Semester ke ' . $angka;
 Route::get('/cari-mahasiswa', [MahasiswaController::class, 'cari']);
 
 Route::get('/matakuliah', [MatakuliahController::class, 'index']);
+
+Route::get('/mahasiswa-data', [MahasiswaWebController::class,
+'index'])->name('mahasiswa.data');
