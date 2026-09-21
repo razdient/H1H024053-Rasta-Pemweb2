@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MatakuliahController;
@@ -20,10 +19,6 @@ Route::get('/salam', function () {
 return 'Selamat datang di Pemrograman Web II';
 });
 
-Route::get('/mahasiswa/{nim}', function (string $nim) {
-return 'Data mahasiswa dengan NIM ' . $nim;
-});
-
 Route::get('/matakuliah/{kode}', [MatakuliahController::class, 'show']);
 
 Route::get('/semester/{angka}', function (int $angka) {
@@ -36,3 +31,12 @@ Route::get('/matakuliah', [MatakuliahController::class, 'index']);
 
 Route::get('/mahasiswa-data', [MahasiswaWebController::class,
 'index'])->name('mahasiswa.data');
+
+Route::get('/mahasiswa-data', [MahasiswaWebController::class, 'index'])
+    ->name('mahasiswa.data');
+
+Route::get('/mahasiswa/{id}', [MahasiswaWebController::class, 'show'])
+    ->name('mahasiswa.detail');
+
+Route::get('/mahasiswa-top-ipk', [MahasiswaWebController::class, 'topIpk'])
+    ->name('mahasiswa.top-ipk');

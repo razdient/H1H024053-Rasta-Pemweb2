@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use App\Models\Mahasiswa;
 class MahasiswaController extends Controller
 {
 public function index()
@@ -16,10 +17,19 @@ $daftarMahasiswa = [
 return view('mahasiswa.index', ['daftarMahasiswa' =>
 $daftarMahasiswa]);
 }
-public function show(string $nim)
+
+public function show($id)
 {
-return view('mahasiswa.show', ['nim' => $nim]);
+    $mahasiswa = Mahasiswa::with([
+        'programStudi',
+        'matakuliah'
+    ])->findOrFail($id);
+
+    return view('mahasiswa.detail', [
+        'mahasiswa' => $mahasiswa
+    ]);
 }
+
 public function cari(Request $request)
 {
 $kataKunci = $request->query('q', '');
@@ -29,5 +39,18 @@ return response()->json([
 'path' => $request->path(),
 ]);
 }
+public function topIpk()
+{
+    $mahasiswa = Mahasiswa::with('programStudi')
+        ->whereHas('programStudi', function ($query) {
+            $query->where('nama', 'Teknik Komputer');
+        })
+        ->orderByDesc('ipk')
+        ->take(10)
+        ->get();
 
+    return view('mahasiswa.top-ipk', [
+        'mahasiswa' => $mahasiswa
+    ]);
+}
 }

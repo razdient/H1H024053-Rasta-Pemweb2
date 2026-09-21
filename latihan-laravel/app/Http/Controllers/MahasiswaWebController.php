@@ -43,10 +43,17 @@ mahasiswa berhasil disimpan');
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    public function show($id)
+{
+    $mahasiswa = Mahasiswa::with([
+        'programStudi',
+        'matakuliah'
+    ])->findOrFail($id);
+
+    return view('mahasiswa.detail', [
+        'mahasiswa' => $mahasiswa
+    ]);
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -71,4 +78,18 @@ mahasiswa berhasil disimpan');
     {
         //
     }
+    public function topIpk()
+{
+    $mahasiswa = Mahasiswa::with('programStudi')
+        ->whereHas('programStudi', function ($query) {
+            $query->where('nama', 'Teknik Komputer');
+        })
+        ->orderByDesc('ipk')
+        ->take(10)
+        ->get();
+
+    return view('mahasiswa.top-ipk', [
+        'mahasiswa' => $mahasiswa
+    ]);
+}
 }
