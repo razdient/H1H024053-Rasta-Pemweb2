@@ -1,14 +1,14 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\Api\MahasiswaController;
 use App\Http\Controllers\MatakuliahController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MahasiswaWebController;
 
-Route::get('/data-mahasiswa', [MahasiswaController::class,
+Route::get('/data-mahasiswa', [MahasiswaWebController::class,
 'index'])->name('mahasiswa.index');
 
-Route::get('/data-mahasiswa/{nim}', [MahasiswaController::class,
+Route::get('/data-mahasiswa/{nim}', [MahasiswaWebController::class,
 'show'])->name('mahasiswa.show');
 
 Route::get('/', function () {
@@ -25,7 +25,7 @@ Route::get('/semester/{angka}', function (int $angka) {
 return 'Semester ke ' . $angka;
 })->whereNumber('angka');
 
-Route::get('/cari-mahasiswa', [MahasiswaController::class, 'cari']);
+Route::get('/cari-mahasiswa', [MahasiswaWebController::class, 'cari']);
 
 Route::get('/matakuliah', [MatakuliahController::class, 'index']);
 
@@ -40,3 +40,6 @@ Route::get('/mahasiswa/{id}', [MahasiswaWebController::class, 'show'])
 
 Route::get('/mahasiswa-top-ipk', [MahasiswaWebController::class, 'topIpk'])
     ->name('mahasiswa.top-ipk');
+
+Route::post('/auth/login', [AuthController::class,
+'login'])->middleware('throttle:5,1');
