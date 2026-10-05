@@ -3,7 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Auth\AuthenticationExceptions;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,17 +17,31 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
-    
-        })->create();
-   
-        $exceptions->render(function (AuthenticationException $e, Request
-$request) {
-if ($request->is('api/*')) {
-return response()->json([
-'sukses' => false,
-'pesan' => 'Token tidak valid atau belum dikirim',
-], 401);
-}
-});
+    ->withExceptions(function (Exceptions $exceptions) {
+
+        $exceptions->render(function (
+            NotFoundHttpException $e,
+            Request $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'sukses' => false,
+                    'pesan' => 'Sumber daya tidak ditemukan',
+                ], 404);
+            }
+        });
+
+        $exceptions->render(function (
+            ValidationException $e,
+            Request $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'sukses' => false,
+                    'pesan' => 'Data yang dikirim tidak valid',
+                    'galat' => $e->errors(),
+                ], 422);
+            }
+        });
+    })
+    ->create();
