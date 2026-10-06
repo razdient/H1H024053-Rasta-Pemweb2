@@ -23,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         return route('login');
     });
+    $middleware->alias([
+        'admin' => \App\Http\Middleware\PeranAdmin::class,
+    ]);
 })
     ->withExceptions(function (Exceptions $exceptions) {
 

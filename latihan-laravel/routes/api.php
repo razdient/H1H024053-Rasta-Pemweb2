@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/profil', [AuthController::class, 'profil']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/logout-semua', [AuthController::class, 'logoutSemua']);
+    Route::put('/auth/password', [AuthController::class, 'password']);
 
     Route::get('/mahasiswa', [MahasiswaController::class, 'index']);
     Route::get('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'show']);
@@ -29,8 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/mahasiswa', [MahasiswaController::class, 'store']);
     Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update']);
     Route::patch('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update']);
-    Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy']);
-  });
+    Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])
+    ->middleware('admin');  });
 });
 
 Route::apiResource('matakuliah', MatakuliahController::class);
