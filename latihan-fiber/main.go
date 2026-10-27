@@ -1,34 +1,63 @@
 package main
 
 import (
-	"log"
-
-	"github.com/gofiber/fiber/v3"
+	"errors"
+	"fmt"
 )
 
+type Mahasiswa struct {
+	Nim      string
+	Nama     string
+	Angkatan int
+	Ipk      float64
+}
+
+func cariMahasiswa(daftar []Mahasiswa, nim string) (Mahasiswa, error) {
+	for i := 0; i < len(daftar); i++ {
+		if daftar[i].Nim == nim {
+			return daftar[i], nil
+		}
+	}
+
+	return Mahasiswa{}, errors.New("mahasiswa tidak ditemukan")
+}
+
+func rerataIpk(daftar []Mahasiswa) float64 {
+	if len(daftar) == 0 {
+		return 0
+	}
+
+	var total float64
+
+	for i := 0; i < len(daftar); i++ {
+		total = total + daftar[i].Ipk
+	}
+
+	return total / float64(len(daftar))
+}
+
 func main() {
+	daftar := []Mahasiswa{
+		{Nim: "H1A123001", Nama: "Andi Prasetyo", Angkatan: 2023, Ipk: 3.45},
+		{Nim: "H1A123002", Nama: "Bunga Lestari", Angkatan: 2023, Ipk: 3.80},
+		{Nim: "H1A124003", Nama: "Citra Ramadhani", Angkatan: 2024, Ipk: 3.20},
+	}
 
-	app := fiber.New()
+	ditemukan, err := cariMahasiswa(daftar, "H1A123002")
+	if err != nil {
+		fmt.Println("Galat:", err)
+		return
+	}
 
-	app.Get("/", func(c fiber.Ctx) error {
-		return c.SendString("Halo Pemrograman Web II")
-	})
+	fmt.Println("Ditemukan:", ditemukan.Nama)
+	fmt.Printf("Rerata IPK: %.2f\n", rerataIpk(daftar))
 
-	app.Get("/api/info", func(c fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"aplikasi": "Latihan Fiber",
-			"versi":    "1.0.0",
-			"status":   "berjalan",
-		})
-	})
+	jumlahPerAngkatan := make(map[int]int)
 
-	app.Get("/api/mahasiswa", func(c fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"nim":            "H1H024053",
-			"nama":           "Rasta Listiadi",
-			"program_studi": "Teknik Komputer",
-		})
-	})
+	for i := 0; i < len(daftar); i++ {
+		jumlahPerAngkatan[daftar[i].Angkatan] =
+			jumlahPerAngkatan[daftar[i].Angkatan] + 1
+	}
 
-	log.Fatal(app.Listen(":3000"))
+	fmt.Println("Jumlah per angkatan:", jumlahPerAngkatan)
 }
