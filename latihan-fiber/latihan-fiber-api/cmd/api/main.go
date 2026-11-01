@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	recoverer "github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
+	"github.com/joho/godotenv"
 
 	"latihan-fiber-api/internal/config"
 	"latihan-fiber-api/internal/middleware"
@@ -15,6 +16,10 @@ import (
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Gagal membaca file .env")
+	}
+
 	konf := config.Muat()
 
 	app := fiber.New(fiber.Config{
