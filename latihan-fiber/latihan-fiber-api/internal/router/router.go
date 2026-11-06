@@ -21,6 +21,8 @@ func Daftarkan(app *fiber.App) {
 	mahasiswa.Use(middleware.KunciApi)
 
 	mahasiswa.Get("/", handler.DaftarMahasiswa)
-	mahasiswa.Get("/nim/:nim", handler.CariMahasiswaNIM)
+	mahasiswa.Post("/", handler.BuatMahasiswa)
 	mahasiswa.Get("/:id", handler.DetailMahasiswa)
+	mahasiswa.Put("/:id", handler.PerbaruiMahasiswa)
+	mahasiswa.Delete("/:id", handler.HapusMahasiswa)
 }
