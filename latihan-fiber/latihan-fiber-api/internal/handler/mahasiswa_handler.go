@@ -186,3 +186,29 @@ func HapusMahasiswa(c fiber.Ctx) error {
 		"pesan":  "Data mahasiswa berhasil dihapus",
 	})
 }
+
+func PulihkanMahasiswa(c fiber.Ctx) error {
+	id, err := strconv.ParseUint(c.Params("id"), 10, 32)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"pesan": "ID tidak valid",
+		})
+	}
+
+	err = repository.Pulihkan(uint(id))
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return c.Status(404).JSON(fiber.Map{
+			"pesan": "Data mahasiswa tidak ditemukan atau tidak sedang dihapus",
+		})
+	}
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"pesan": "Gagal memulihkan data mahasiswa",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"pesan": "Data mahasiswa berhasil dipulihkan",
+	})
+}

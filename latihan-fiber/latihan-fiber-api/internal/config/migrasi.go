@@ -10,6 +10,7 @@ func Migrasi() {
 	err := DB.AutoMigrate(
 		&model.ProgramStudi{},
 		&model.Mahasiswa{},
+		&model.Matakuliah{},
 	)
 
 	if err != nil {

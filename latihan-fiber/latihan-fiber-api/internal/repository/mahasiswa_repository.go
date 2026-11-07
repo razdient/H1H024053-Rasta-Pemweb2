@@ -3,6 +3,8 @@ package repository
 import (
 	"latihan-fiber-api/internal/config"
 	"latihan-fiber-api/internal/model"
+
+	"gorm.io/gorm"
 )
 
 type FilterMahasiswa struct {
@@ -65,4 +67,21 @@ func Perbarui(mahasiswa *model.Mahasiswa) error {
 
 func Hapus(mahasiswa *model.Mahasiswa) error {
 	return config.DB.Delete(mahasiswa).Error
+}
+
+func Pulihkan(id uint) error {
+	hasil := config.DB.Unscoped().
+		Model(&model.Mahasiswa{}).
+		Where("id = ?", id).
+		Update("deleted_at", nil)
+
+	if hasil.Error != nil {
+		return hasil.Error
+	}
+
+	if hasil.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
 }
