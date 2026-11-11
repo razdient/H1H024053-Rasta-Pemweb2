@@ -11,6 +11,7 @@ func Migrasi() {
 		&model.ProgramStudi{},
 		&model.Mahasiswa{},
 		&model.Matakuliah{},
+		&model.Pengguna{}, // Tambahkan model Pengguna
 	)
 
 	if err != nil {
